@@ -1,34 +1,37 @@
-scene.setBackgroundColor(6)
+scene.setBackgroundColor(9)
+effects.clouds.startScreenEffect()
 info.setLife(3)
-game.splash("Press A to Boost Mario")
-//  Setup player
-let Mario = sprites.create(img`
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . 2 2 2 2 2 . . . .
-    . . . . . . . 2 2 2 2 2 . . . .
-    . . . . . . . 2 2 2 2 2 . . . .
-    . . . . . . . 2 2 2 2 2 . . . .
-    . . . . . . . 2 2 2 2 2 . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
+game.splash("Press A to Boost up")
+//  Make character
+let Jetboy = sprites.create(img`
+    . . . 5 5 5 5 5 5 5 5 5 5 5 . .
+    . . . d d d d d d d d 5 5 5 5 .
+    . . . d d f d d d d f d d . . .
+    . . . d d f d d d d f d d . . .
+    . . . d d d d d d d d d d . . .
+    . . . d d d f d d f d d d . . .
+    . . . d d d d f f d d d d . . .
+    . b b 8 8 d d d d d 8 8 . . . .
+    b b b d d 8 8 8 8 8 d d . . . .
+    f f f d d 8 8 8 8 8 d d . . . .
+    f f f d d 8 8 8 8 8 d d . . . .
+    b b b d d 8 8 8 8 8 d d . . . .
+    5 2 2 5 8 8 8 8 8 8 8 8 . . . .
+    2 5 5 5 . a a . . . a a . . . .
+    5 2 5 2 . a a . . . a a . . . .
+    2 5 2 5 f f f . . . f f f . . .
 `)
-Mario.setKind(SpriteKind.Player)
-Mario.ay = 190
-Mario.x = 40
+Jetboy.setKind(SpriteKind.Player)
+Jetboy.ay = 190
+Jetboy.x = 40
 controller.A.onEvent(ControllerButtonEvent.Pressed, function flap() {
-    Mario.setVelocity(0, -100)
+    Jetboy.setVelocity(0, -100)
+    Jetboy.startEffect(effects.fire, 175)
+    music.baDing.play()
 })
 game.onUpdateInterval(1500, function on_update_interval() {
     let gate_img = image.create(10, scene.screenHeight())
-    gate_img.fill(7)
+    gate_img.fill(10)
     gate_img.fillRect(0, randint(10, 40), 10, randint(50, 80), 0)
     let gate = sprites.createProjectileFromSide(gate_img, -50, 0)
     gate.setPosition(scene.screenWidth(), scene.screenHeight() / 2)
@@ -40,18 +43,18 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function on_overlap(
     death()
 })
 game.onUpdate(function on_update() {
-    if (Mario.y > scene.screenHeight()) {
+    if (Jetboy.y > scene.screenHeight()) {
         death()
-    } else if (Mario.y < 0) {
-        Mario.y = 0
+    } else if (Jetboy.y < 0) {
+        Jetboy.y = 0
     }
     
 })
 function death() {
     info.changeLifeBy(-1)
     if (info.life() != 0) {
-        Mario.vy = 0
-        Mario.y = scene.screenHeight() / 2
+        Jetboy.vy = 0
+        Jetboy.y = scene.screenHeight() / 2
         game.splash("Press A to Start")
     }
     
